@@ -25,8 +25,30 @@ def home(request):
     return HttpResponse(template3.render({}, request))
 
 def addrecord(request):
-  x = request.POST['username']
-  y = request.POST['password']
+  x = request.POST['first']
+  y = request.POST['last']
   member = raihanapps(firstname=x, lastname=y)
+  member.save()
+  return HttpResponseRedirect(reverse('index'))
+
+def delete(request, id):
+  table = raihanapps.objects.get(id=id)
+  table.delete()
+  return HttpResponseRedirect(reverse('index'))
+
+def update(request, id):
+  mymember = raihanapps.objects.get(id=id)
+  template = loader.get_template('update.html')
+  context = {
+    'mymember': mymember,
+  }
+  return HttpResponse(template.render(context, request))
+
+def updaterecord(request, id):
+  first = request.POST['first']
+  last = request.POST['last']
+  member = raihanapps.objects.get(id=id)
+  member.firstname = first
+  member.lastname = last
   member.save()
   return HttpResponseRedirect(reverse('index'))
